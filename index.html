@@ -179,7 +179,90 @@
 body { 
   background-image: linear-gradient(to top, #0B2E59 -10%, #69D2E7 20%, #6fDaEF 80%, #fffabb 105%);
 }
+	  
+	  *********************** BUTTONS ***********************
+$header-font: 'Dosis', sans-serif;
+$button-font: 'Montserrat', sans-serif;
 
+$gray: #2b2d30;
+$blue: #2d7eff;
+$teal: #10FFB4;
+$purple: #8041F2;
+$blue-gray: #3095ED;
+$orange: #FF530D;
+
+* {
+	box-sizing: border-box;
+	background-color: $gray;
+}
+
+h1 {
+	color: white;
+	font: 1.5em $header-font;
+	letter-spacing: 1px;
+	text-align: center;
+}
+
+@media (min-width: 417px) and (max-width: 567px) {
+	h1 {
+		font-size: 2em;
+	}
+}
+
+@media (min-width: 568px) {
+	h1 {
+		font-size: 3em;
+	}
+}
+
+.container {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+
+	.buttons {
+		display: flex;
+		flex-direction: column;
+	}
+	
+		a {
+			padding: 15px 20px;
+			font: 13px $button-font;
+			font-weight: 700;
+			letter-spacing: 2px;
+			text-transform: uppercase;
+			text-decoration: none;
+			text-align: center;
+			margin: 1em;
+		}
+
+		a:hover {
+			box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.20), 0 6px 20px 0 rgba(0, 0, 0, 0.20);
+		}
+	
+	@media (min-width: 417px) and (max-width: 567px) {
+		a {
+			padding: 15px 30px;
+			font: 16px $button-font;
+		}
+	}
+		
+	@media (min-width: 568px) {
+		a {
+			padding: 15px 50px;
+			font: 20px $button-font;
+		}
+	}
+}
+
+.button1 {
+	color: white;
+	background-color: $blue;
+	border: 5px solid transparent;
+	transition: .2s ease;
+	border-radius: 50px;
+}
+	  
   </style>
   
   <title>DaBoltGod</title>
@@ -214,6 +297,12 @@ body {
     </div>
 </div>
 </section>
+	
+	<div class="container">
+	<div class="buttons">
+		<a href="https://jacoblisic.com" class="button1" target="_blank" rel="noopener">Hover Me</a>
+	</div>
+</div>
 	
 	  <canvas id="canvas"></canvas>
 
