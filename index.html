@@ -1,261 +1,155 @@
 <!DOCTYPE html>
 <html>
   <style>
-@import url('https://fonts.googleapis.com/css?family=Raleway:300&display=swap');
-@import url('https://fonts.googleapis.com/css?family=Monoton&display=swap');
-@import url('https://fonts.googleapis.com/css?family=Poppins:500&display=swap');
-@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@600&display=swap");
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: "Nunito", sans-serif;
+	  @import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&display=swap');
+
+html, body {
+  margin:0;
+  overflow: hidden;
+    background-color: rgb(17, 21, 28);
 }
-    
-        body {
-    user-select: none;
-    height: auto;
-    overflow-x: hidden;
+
+a {
+    color: rgba(255, 255, 255, 0.5);
+    text-decoration: none;
+    transition: all 0.5s ease-in-out;
+}
+
+a:hover{
+  filter: drop-shadow(0px 0px 10px rgba(255, 255, 255, 0.9));
+}
+
+canvas{
+  height 100%;
+  width: 100%;
+  z-index: 0;
+}
+
+.text-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    top: 10%;
+    height: 80%;
     width: 100%;
-    background: #171717;
+    position: fixed;
+    left: 0;
+    z-index: 1;
 }
-    
-    .cursor {
-  position: fixed;
-  border-radius: 50%;
-  transform: translateX(-50%) translateY(-50%);
-  pointer-events: none;
-  left: -100px;
-  top: 50%;
-  mix-blend-mode: difference;
-  background-color: white;
-  z-index: 10000;
-  border: 2px solid white;
-  height: 30px;
-  width: 30px;
-  transition: all 300ms ease-out;
+
+.title{
+  font-family: 'Open Sans', sans-serif;
+  font-size: 0.5rem;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.3rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.5);
 }
-    
-.text-animation {
-  background: #000;
-  min-height: 100vh;
+
+.socials{
+}
+
+.socials svg{
+    margin: 0 5px;
+    transition: all 0.5s ease-in-out;
+    transform: scale(1);
+}
+
+.socials svg:hover{
+    transform: scale(1.2);
+  filter: drop-shadow(0px 0px 5px rgba(255, 255, 255, 1));
+}
+	  
+	  body.tutorial {
+  --color-text: #fff;
+  --color-bg: #171717;
+  --color-link: #ff0000;
+  background-color: var(--color-bg);
+}
+.page {
+  position: absolute;
+  width: 100%;
+  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
 }
-.text-wrapper {
-  position: relative;
-}
-
-.text-wrapper h2 {
-  z-index: 4;
-  color: #fff;
-  font-size: 15vw;
-  white-space: nowrap;
-  position: absolute;
-  transform: translate(-50%, -62%);
-}
-
-.text-wrapper h2:nth-child(1) {
-  color: transparent;
-  -webkit-text-stroke: 2px #fff;
-}
-
-.text-wrapper h2:nth-child(2) {
-  color: #fff;
-  animation: wave 4s ease-in-out infinite;
-}
-
-@keyframes wave {
-  /* start point */
-  0%,
-  100% {
-    clip-path: polygon(
-      0% 46%,
-      17% 45%,
-      34% 50%,
-      56% 61%,
-      69% 62%,
-      86% 60%,
-      100% 51%,
-      100% 100%,
-      0% 100%
-    );
-  }
-  /* Mid point */
-  50% {
-    clip-path: polygon(
-      0% 59%,
-      16% 64%,
-      33% 65%,
-      52% 61%,
-      70% 52%,
-      85% 47%,
-      100% 48%,
-      100% 100%,
-      0% 100%
-    );
-  }
-}
-
-/* ********************* Image Waves ************************ */
-.waveDiv {
-  position: absolute;
-  overflow: hidden;
-  margin: auto;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-}
-.wave-content-wrapper {
-  height: 100%;
+.page__inner {
+  display: flex;
+  justify-content: center;
   width: 100%;
-  position: absolute;
-  overflow: hidden;
-  bottom: -1px;
-  background-image: linear-gradient(to top, #00607a 30%, #002029 90%);
 }
-.first-wave {
-  z-index: 3;
-  opacity: 0.5;
-}
-.second-wave {
-  z-index: 2;
-  opacity: 0.75;
-}
-.third-wave {
-  z-index: 1;
-}
-.wave-image {
-  width: 200%;
-  height: 100%;
-  position: absolute;
+.cursor {
+  position: fixed;
   left: 0;
-  background-repeat: repeat no-repeat;
-  background-position: 0 bottom;
-  transform-origin: center bottom;
+  top: 0;
+  pointer-events: none;
 }
-.first-image {
-  background-size: 50% 100px;
+.cursor--small {
+  width: 10px;
+  height: 10px;
+  left: -2.5px;
+  top: -2.5px;
+  border-radius: 50%;
+  z-index: 11000;
+  background: var(--color-text);
 }
-.animation-wave .first-image {
-  animation: move-wave 3s;
-  -webkit-animation: move-wave 3s;
-  -webkit-animation-delay: 2s;
-  animation-delay: 2s;
+.cursor--canvas {
+  width: 100vw;
+  height: 100vh;
+  z-index: 12000;
 }
-.second-image {
-  background-size: 50% 120px;
+.nav {
+  display: flex;
+  position: absolute;
+  color: #ffff !important;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);  
 }
-.animation-wave .second-image {
-  animation: waves 10s linear infinite;
+.link {
+  display: flex;
+  width: 75px;
+  height: 75px;
+  margin: 0 5px;
+  justify-content: center;
+  align-items: center;
 }
-.third-image {
-  background-size: 50% 140px;
+.settings-icon {
+  display: block;
+  width: 40px;
+  height: 40px;
 }
-.animation-wave .third-image {
-  animation: waves 15s linear infinite;
+.settings-icon__line {
+  stroke: var(--color-text);
+  stroke-width: 5px;
+  transition: all 0.2s ease 0.05s;
 }
-
-@keyframes waves {
-  0% {
-    transform: translateX(0) scaleY(1);
-  }
-  50% {
-    transform: translateX(-25%) scaleY(0.55);
-  }
-  100% {
-    transform: translateX(-50%) scaleY(1);
-  }
+.settings-icon__rect {
+  stroke: var(--color-text);
+  fill: var(--color-bg);
+  stroke-width: 5px;
+  transition: all 0.2s ease 0.05s;
 }
-   *********************************** BUBBLES ************************************* 
-    
-    canvas {
-  filter: blur(1px);
+.link:hover .settings-icon__line,
+.link:hover .settings-icon__rect {
+  stroke: var(--color-link);
+  transition: all 0.2s ease 0.05s;
 }
-
-body { 
-  background-image: linear-gradient(to top, #0B2E59 -10%, #69D2E7 20%, #6fDaEF 80%, #fffabb 105%);
+.link:hover .settings-icon__group--1 .settings-icon__rect {
+  transform: translateY(20px);
 }
-	  
-	  *********************** BUTTONS ***********************
-$header-font: 'Dosis', sans-serif;
-$button-font: 'Montserrat', sans-serif;
-
-$gray: #2b2d30;
-$blue: #2d7eff;
-$teal: #10FFB4;
-$purple: #8041F2;
-$blue-gray: #3095ED;
-$orange: #FF530D;
-
-h1 {
-	color: white;
-	font: 1.5em $header-font;
-	letter-spacing: 1px;
-	text-align: center;
+.link:hover .settings-icon__group--2 .settings-icon__rect {
+  transform: translateY(-20px);
 }
-
-@media (min-width: 417px) and (max-width: 567px) {
-	h1 {
-		font-size: 2em;
-	}
-}
-
-@media (min-width: 568px) {
-	h1 {
-		font-size: 3em;
-	}
-}
-
-.container {
-	display: flex;
-	flex-wrap: wrap;
-	justify-content: center;
-
-	.buttons {
-		display: flex;
-		flex-direction: column;
-	}
-	
-		a {
-			padding: 15px 20px;
-			font: 13px $button-font;
-			font-weight: 700;
-			letter-spacing: 2px;
-			text-transform: uppercase;
-			text-decoration: none;
-			text-align: center;
-			margin: 1em;
-		}
-
-		a:hover {
-			box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.20), 0 6px 20px 0 rgba(0, 0, 0, 0.20);
-		}
-	
-	@media (min-width: 417px) and (max-width: 567px) {
-		a {
-			padding: 15px 30px;
-			font: 16px $button-font;
-		}
-	}
-		
-	@media (min-width: 568px) {
-		a {
-			padding: 15px 50px;
-			font: 20px $button-font;
-		}
-	}
-}
-
-.button1 {
-	color: white;
-	background-color: $blue;
-	border: 5px solid transparent;
-	transition: .2s ease;
-	border-radius: 50px;
+.link:hover .settings-icon__group--3 .settings-icon__rect {
+  transform: translateY(25px);
+} 
+.page, .page a {
+ cursor: none;
 }
 	  
   </style>
@@ -270,38 +164,37 @@ h1 {
 <body>
 <div class='cursor' id="cursor"></div>
   
-<section>
-  <div class="container">
-    <div class="text-animation">
-      <div class="text-wrapper">
-        <h2>DaBoltGod</h2>
-        <h2>DaBoltGod</h2>
-	      
-	<div class="buttons">
-		<a href="https://github.com/daboltgod" class="button1" target="_blank" rel="noopener">GitHub</a>
-		<a href="https://discord.com" class="button1" target="_blank" rel="noopener">Discord</a>
-	</div>
-</div>
-	      
-      </div>
-    </div>
 
-    <div class="waveDiv animation-wave">
-      <div class="wave-content-wrapper first-wave">
-        <div class="wave-image first-image" style="background-image: url('https://www.yudiz.com/codepen/wave-animation/first-wave.png')"></div>
-      </div>
-      <div class="wave-content-wrapper second-wave">
-        <div class="wave-image second-image" style="background-image: url('https://www.yudiz.com/codepen/wave-animation/second-wave.png')"></div>
-      </div>
-      <div class="wave-content-wrapper third-wave">
-        <div class="wave-image third-image" style="background-image: url('https://www.yudiz.com/codepen/wave-animation/third-wave.png')"></div>
-      </div>
+<div class="text-container">
+  <div class="title">DaBoltGod
+    <br>
+    <a href="#" target="_blank">@daboltgod</a>
     </div>
-</div>
-</section>
-	
-	  <canvas id="canvas"></canvas>
+    <div class="socials">
+      <a href="https://instagram.com/" target="_blank">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path fill="currentColor" d="M7.8 2h8.4C19.4 2 22 4.6 22 7.8v8.4a5.8 5.8 0 0 1-5.8 5.8H7.8C4.6 22 2 19.4 2 16.2V7.8A5.8 5.8 0 0 1 7.8 2m-.2 2A3.6 3.6 0 0 0 4 7.6v8.8C4 18.39 5.61 20 7.6 20h8.8a3.6 3.6 0 0 0 3.6-3.6V7.6C20 5.61 18.39 4 16.4 4H7.6m9.65 1.5a1.25 1.25 0 0 1 1.25 1.25A1.25 1.25 0 0 1 17.25 8A1.25 1.25 0 0 1 16 6.75a1.25 1.25 0 0 1 1.25-1.25M12 7a5 5 0 0 1 5 5a5 5 0 0 1-5 5a5 5 0 0 1-5-5a5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3a3 3 0 0 0 3 3a3 3 0 0 0 3-3a3 3 0 0 0-3-3Z"/></svg>
+      </a>
 
+      <a href="https://twitter.com/" target="_blank">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path fill="currentColor" d="M22.46 6c-.77.35-1.6.58-2.46.69c.88-.53 1.56-1.37 1.88-2.38c-.83.5-1.75.85-2.72 1.05C18.37 4.5 17.26 4 16 4c-2.35 0-4.27 1.92-4.27 4.29c0 .34.04.67.11.98C8.28 9.09 5.11 7.38 3 4.79c-.37.63-.58 1.37-.58 2.15c0 1.49.75 2.81 1.91 3.56c-.71 0-1.37-.2-1.95-.5v.03c0 2.08 1.48 3.82 3.44 4.21a4.22 4.22 0 0 1-1.93.07a4.28 4.28 0 0 0 4 2.98a8.521 8.521 0 0 1-5.33 1.84c-.34 0-.68-.02-1.02-.06C3.44 20.29 5.7 21 8.12 21C16 21 20.33 14.46 20.33 8.79c0-.19 0-.37-.01-.56c.84-.6 1.56-1.36 2.14-2.23Z"/></svg>
+      </a>
+
+      <a href="https://daboltgod.ml/links" target="_blank">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 256 256"><path fill="currentColor" d="M128 24a104 104 0 1 0 104 104A104.11 104.11 0 0 0 128 24Zm-26.37 144h52.74C149 186.34 140 202.87 128 215.89c-12-13.02-21-29.55-26.37-47.89ZM98 152a145.72 145.72 0 0 1 0-48h60a145.72 145.72 0 0 1 0 48Zm-58-24a87.61 87.61 0 0 1 3.33-24h38.46a161.79 161.79 0 0 0 0 48H43.33A87.61 87.61 0 0 1 40 128Zm114.37-40h-52.74C107 69.66 116 53.13 128 40.11c12 13.02 21 29.55 26.37 47.89Zm19.84 16h38.46a88.15 88.15 0 0 1 0 48h-38.46a161.79 161.79 0 0 0 0-48Zm32.16-16h-35.43a142.39 142.39 0 0 0-20.26-45a88.37 88.37 0 0 1 55.69 45ZM105.32 43a142.39 142.39 0 0 0-20.26 45H49.63a88.37 88.37 0 0 1 55.69-45ZM49.63 168h35.43a142.39 142.39 0 0 0 20.26 45a88.37 88.37 0 0 1-55.69-45Zm101.05 45a142.39 142.39 0 0 0 20.26-45h35.43a88.37 88.37 0 0 1-55.69 45Z"/></svg>
+      </a>
+
+    </div>
+  </div>
+
+	      <!-- The cursor elements --> 
+      <div class="cursor cursor--small"></div>
+      <canvas class="cursor cursor--canvas" resize></canvas>
+      
+    </div>
+  </main>
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/paper.js/0.12.0/paper-core.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/simplex-noise/2.4.0/simplex-noise.min.js"></script>
   
   <script>
     var cursor = document.getElementById("cursor");
@@ -312,122 +205,180 @@ document.body.addEventListener("mousemove", function(e) {
   </script>
   
   
-  ************************* BUBBLES *******************************
-  <script>
-    var canvas = document.getElementById('canvas');
-var context = canvas.getContext('2d');
-var circleArray = [];
-//Color array to look like bubbles
-var ballColorSelections = ['#A7DBD8', '#EFEFEF', '#ADF7D3', '#88F7D2'];
+<script>
+	var t;
+var x;
+var y;
+var easing;
+var easing2;
+var pointCount;
 
-//Global settings
-var settings = {
-	maxCount: 400,
-  //Reversed the bounce from collisions to create an attraction
-	bounce: -0.05,
-	force: -1.25,
-	gravity: -0.01
+function setup() {
+    initializeFields();
+    background(17, 21, 28);
+    createCanvas(windowWidth, windowHeight);
+    pixelDensity(displayDensity());
 }
 
-//Just for my profile background, using the CSS here for it too ;)
-document.body.style.overflow = 'hidden';
+function draw() {
+    background(17, 21, 28);
+    strokeWeight(2);
 
-canvas.height = window.innerHeight;
-canvas.width = window.innerWidth;
+    let targetX = mouseX;
+    let dx = targetX - x;
+    x += dx * easing;
 
-createCircle(settings.maxCount);
+    let targetY = mouseY;
+    let dy = targetY - y;
+    y += dy * easing2;
 
-window.addEventListener('resize', function() {
-	canvas.height = window.innerHeight;
-	canvas.width = window.innerWidth;
-});
+    let diameter1 = (width / 4 + height / 4) * 2;
+    let diameter2 = (width / 4 + height / 4) * 0.2;
+    let diameter3 = (width / 4 + height / 4) * 2;
 
-function Circle() {
-	this.positionX = (Math.random() * window.innerWidth/2) + window.innerWidth/4;
-	this.positionY = window.innerHeight;
-	this.radius = Math.floor((Math.random() * window.innerWidth * 0.005) + 1);
-	this.velocityY = (Math.random() * 100) / 100 * -1;
-	this.velocityX = (Math.random() * 100) / 100 * -1;
-	this.color = ballColorSelections[Math.floor(Math.random() * 5)];
+    let angle1 = 0.01;
+
+    //LOOP
+    for (let i = angle1; i < radians(360 + angle1); i += radians(360 / pointCount)) {
+        let cx1 = diameter2 / 2 * Math.cos(i / 2 + -t * sin(2)) + width / 2;
+        let cy1 = diameter2 / 2 * Math.sin(i / 2 + -t * sin(2)) + height / 2;
+
+        let cx2 = diameter1 / 2 * Math.cos(i + -t * sin(1 + 0.1)) + width / 2;
+        let cy2 = diameter1 / 2 * Math.sin(i + -t * sin(-2 + 0.1)) + height / 2;
+
+        let cx3 = diameter3 / 2 * Math.cos(-i + -t * sin(1 + 0.1)) + width / 2;
+        let cy3 = diameter3 / 2 * Math.sin(-i + -t * sin(-2 + 0.1)) + height / 2;
+
+        let cx4 = diameter2 / 2 * Math.cos(i / -2 + -t * sin(2)) + width / 2;
+        let cy4 = diameter2 / 2 * Math.sin(i / -2 + -t * sin(2)) + height / 2;
+
+        //BEZIER
+        strokeWeight(0.2);
+        stroke(261, 261, 261);
+        noFill();
+        beginShape();
+        vertex(cx1, cy1);
+        bezierVertex(cx2, cy2, cx3, cy3, cx4, cy4);
+        endShape();
+    }
+    t += 0.0025;
 }
 
-function createCircle(max) {
-	for (var i = 0; i < max; i++) {
-		var circleObject = new Circle;
-		circleObject.id = i;
-		circleArray.push(circleObject);
-	}
-	//After creation of circle attributes, the animations begin
-	moveCircle();
+function initializeFields() {
+    t = 0;
+    x = 0;
+    y = 0;
+    easing = 0.001;
+    easing2 = 0.01;
+    pointCount = 100;
 }
 
-function drawCircle(object) {
+function windowResized() {
+    resizeCanvas(windowWidth, windowHeight);
+}
+	</script>
 
-	for (var i = 0; i < object.length; i++) {
-		context.beginPath();
-		context.arc(object[i].positionX, object[i].positionY, object[i].radius, 0, 2 * Math.PI);
-		context.fillStyle = object[i].color;
-		context.fill();
-		context.closePath();
-	}
+<script>
+	let clientX = -100;
+let clientY = -100;
+const innerCursor = document.querySelector(".cursor--small");
 
+const initCursor = () => {
+
+  document.addEventListener("mousemove", e => {
+    clientX = e.clientX;
+    clientY = e.clientY;
+  });
+  
+  
+  const render = () => {
+    innerCursor.style.transform = `translate(${clientX}px, ${clientY}px)`;
+    
+    requestAnimationFrame(render);
+  };
+  requestAnimationFrame(render);
+};
+
+initCursor();
+let lastX = 0;
+let lastY = 0;
+let isStuck = false;
+let showCursor = false;
+let group, stuckX, stuckY, fillOuterCursor;
+
+const initCanvas = () => {
+  const canvas = document.querySelector(".cursor--canvas");
+  const shapeBounds = {
+    width: 75,
+    height: 75
+  };
+  paper.setup(canvas);
+  const strokeColor = "rgba(255, 0, 0, 0.5)";
+  const strokeWidth = 1;
+  const segments = 8;
+  const radius = 25;
+  
+  const noiseScale = 150; // speed
+  const noiseRange = 4; // range of distortion
+  let isNoisy = false; // state
+  
+  const polygon = new paper.Path.RegularPolygon(
+    new paper.Point(0, 0),
+    segments,
+    radius
+  );
+  polygon.strokeColor = strokeColor;
+  polygon.strokeWidth = strokeWidth;
+  polygon.smooth();
+  group = new paper.Group([polygon]);
+  group.applyMatrix = false;
+  
+  const noiseObjects = polygon.segments.map(() => new SimplexNoise());
+  let bigCoordinates = [];
+  
+  
+  const lerp = (a, b, n) => {
+    return (1 - n) * a + n * b;
+  };
+  const map = (value, in_min, in_max, out_min, out_max) => {
+    return (
+      ((value - in_min) * (out_max - out_min)) / (in_max - in_min) + out_min
+    );
+  };
+  
+  paper.view.onFrame = event => {
+   
+    lastX = lerp(lastX, clientX, 0.2);
+    lastY = lerp(lastY, clientY, 0.2);
+    group.position = new paper.Point(lastX, lastY);
+  }
 }
 
-function moveCircle() {
-	
-	context.fillStyle = "#69D2E7"; 
-  context.clearRect(0,0,canvas.width,canvas.height);
+initCanvas();
+const initHovers = () => {
 
-	for (var i = 0; i < circleArray.length; i++) {
+  const handleMouseEnter = e => {
+    const navItem = e.currentTarget;
+    const navItemBox = navItem.getBoundingClientRect();
+    stuckX = Math.round(navItemBox.left + navItemBox.width / 2);
+    stuckY = Math.round(navItemBox.top + navItemBox.height / 2);
+    isStuck = true;
+  };
+  
+  const handleMouseLeave = () => {
+    isStuck = false;
+  };
+  
+  //Event listeners
+  const linkItems = document.querySelectorAll(".link");
+  linkItems.forEach(item => {
+    item.addEventListener("mouseenter", handleMouseEnter);
+    item.addEventListener("mouseleave", handleMouseLeave);
+  });
+};
 
-		collideCircle(circleArray, circleArray[i]);
-		circleArray[i].velocityY += settings.gravity;
-		circleArray[i].positionY += circleArray[i].velocityY;
-		circleArray[i].positionX += circleArray[i].velocityX;
+initHovers();
 
-		if(circleArray[i].positionY > 0 - circleArray[i].radius) {
-			circleArray[i].positionY += circleArray[i].velocityY;
-		} else {
-			circleArray[i].velocityY = (Math.random() * 100) / 100 * -1;
-      circleArray[i].positionX = (Math.random() * window.innerWidth);
-      circleArray[i].positionY = window.innerHeight;
-		}
-
-		if(circleArray[i].positionX > canvas.width + circleArray[i].radius 
-       || circleArray[i].positionX < 0 - circleArray[i].radius) {
-      circleArray[i].positionX = (Math.random() * window.innerWidth);
-      circleArray[i].positionY = window.innerHeight;
-		}
-
-	}
-
-	function collideCircle(collideObject, circleObject) {
-		for (var j = circleObject.id + 1; j < collideObject.length; j++) {
-			var distanceX = collideObject[j].positionX - circleObject.positionX;
-			var distanceY = collideObject[j].positionY - circleObject.positionY;
-			var distance = Math.floor(Math.sqrt((distanceX * distanceX) + (distanceY * distanceY)));
-      //Inflated the minimum distance to attract other particles
-			var minimumDistance = collideObject[j].radius + circleObject.radius * 10;
-			if (distance <= minimumDistance) {
-				var angle = Math.atan2(distanceY, distanceX);
-        var targetX = circleObject.positionX + Math.cos(angle) * minimumDistance;
-        var targetY = circleObject.positionY + Math.sin(angle) * minimumDistance;
-        var angleX = parseInt((targetX - collideObject[j].positionX) * settings.bounce) / 50;
-        var angleY = parseInt((targetY - collideObject[j].positionY) * settings.bounce) / 50;
-        circleObject.velocityX -= angleX;
-        circleObject.velocityY -= angleY;
-        collideObject[j].velocityX += angleX;
-        collideObject[j].velocityY += angleY;
-			}
-
-		}
-	}
-
-	drawCircle(circleArray);
-
-	requestAnimationFrame(moveCircle);
-
-}
-  </script>
+</script>
 </body>
 </html>
