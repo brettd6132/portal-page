@@ -152,6 +152,20 @@ canvas{
  cursor: none;
 }
 	  
+	  html, body {
+                overflow: hidden;
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+
+            #renderCanvas {
+                width: 100%;
+                height: 100%;
+                touch-action: none;
+            }
+	  
   </style>
   
   <title>DaBoltGod</title>
@@ -170,6 +184,12 @@ canvas{
     <br>
     <a href="#" target="_blank">@daboltgod</a>
     </div>
+	
+ <script src="https://preview.babylonjs.com/loaders/babylonjs.loaders.min.js"></script>
+<script src="https://preview.babylonjs.com/materialsLibrary/babylonjs.materials.js"></script>
+<script src="https://code.jquery.com/pep/0.4.3/pep.js"></script>
+        <script src="https://code.jquery.com/pep/0.4.3/pep.js"></script>
+  <canvas id="renderCanvas" touch-action="none"></canvas>
     <div class="socials">
       <a href="https://instagram.com/" target="_blank">
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path fill="currentColor" d="M7.8 2h8.4C19.4 2 22 4.6 22 7.8v8.4a5.8 5.8 0 0 1-5.8 5.8H7.8C4.6 22 2 19.4 2 16.2V7.8A5.8 5.8 0 0 1 7.8 2m-.2 2A3.6 3.6 0 0 0 4 7.6v8.8C4 18.39 5.61 20 7.6 20h8.8a3.6 3.6 0 0 0 3.6-3.6V7.6C20 5.61 18.39 4 16.4 4H7.6m9.65 1.5a1.25 1.25 0 0 1 1.25 1.25A1.25 1.25 0 0 1 17.25 8A1.25 1.25 0 0 1 16 6.75a1.25 1.25 0 0 1 1.25-1.25M12 7a5 5 0 0 1 5 5a5 5 0 0 1-5 5a5 5 0 0 1-5-5a5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3a3 3 0 0 0 3 3a3 3 0 0 0 3-3a3 3 0 0 0-3-3Z"/></svg>
@@ -206,76 +226,378 @@ document.body.addEventListener("mousemove", function(e) {
   
   
 <script>
-	var t;
-var x;
-var y;
-var easing;
-var easing2;
-var pointCount;
+  var canvas = document.getElementById("renderCanvas"); // Get the canvas element 
+  var engine = new BABYLON.Engine(canvas, true); // Generate the BABYLON 3D engine
+  var createScene = function () {
+  var scene = new BABYLON.Scene(engine);
+     var camera = new BABYLON.ArcRotateCamera("camera1",  0, 0, 1000, new BABYLON.Vector3(0, 0, -0), scene);
+   
+  camera.attachControl(canvas, true);
+ 
+  var light = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(1, 1, 0), scene);
+  light.intensity = 0.5;
+  light.specular = new BABYLON.Color3(0.95, 0.95, 0.81);
+  scene.clearColor = new BABYLON.Color3(0.0, 0.0, 0.0); 
+var pl = new BABYLON.PointLight("pl", new BABYLON.Vector3(0, 0, 0), scene);
+  pl.diffuse = new BABYLON.Color3(1, 1, 1);
+  pl.specular = new BABYLON.Color3(0.1, 0.1, 0.12);
+  pl.intensity = 0.5;
+  var fact = 3000;
+  var particleNb = 2000;      
+  var areaSize = 200.0;
+  var scaleX = 0.0;
+  var scaleY = 0.0;
+  var scaleZ = 0.0;
+  var particleSize = Math.random() * 4 + 0.8;
+  var debrisposition = function(particle, i, s) {
+      scaleX = Math.random() * 2 + 0.8;
+      scaleY = Math.random() + 0.8;
+      scaleZ = Math.random() * 2 + 0.8;
+      particle.scale.x = scaleX;
+      particle.scale.y = scaleY;
+      particle.scale.z = scaleZ;
+      particle.position.x = (Math.random() - 0.5) * fact;
+      particle.position.y = (Math.random() - 0.5) * fact;
+      particle.position.z = (Math.random() - 0.5) * fact;
+      particle.rotation.x = Math.random() * 3.5;
+      particle.rotation.y = Math.random() * 3.5;
+      particle.rotation.z = Math.random() * 3.5;
+    
+  };
+   var myVertexFunction = function(particle, vertex, i) {
+      vertex.x *= (Math.random() + 1);
+      vertex.y *= (Math.random() + 1);
+      vertex.z *= (Math.random() + 1);
+  };
+  var myShape = [
+		 	new BABYLON.Vector3(0, 5, 0),
+			new BABYLON.Vector3(1, 1, 0),
+			new BABYLON.Vector3(5, 0, 0),
+			new BABYLON.Vector3(1, -1, 0),
+			new BABYLON.Vector3(0, -5, 0),
+			new BABYLON.Vector3(-1, -1, 0),
+			new BABYLON.Vector3(-5, 0, 0),
+			new BABYLON.Vector3(-1, 1, 0)
+	];
+	
+	myShape.push(myShape[0]);
+	var myPath = [
+			new BABYLON.Vector3(0, 0, 0),
+			new BABYLON.Vector3(0, 0, 1),
+			new BABYLON.Vector3(0, 0, 1),
+			new BABYLON.Vector3(0, 0, 1),
+			new BABYLON.Vector3(0, 0, 1),
+			new BABYLON.Vector3(0, 0, 1)
+	];
+	 var myPositionFunction = function(particle, i, s) {
+   var phi = Math.acos( -1 + ( 2 * i ) / 2000 );
+	  var theta = Math.sqrt( 2000 * Math.PI ) * phi;
+    particle.position.x = Math.floor(Math.random()*3000+2800) * Math.cos( theta ) * Math.sin( phi );
+    particle.position.y = 3000 * Math.sin( theta ) * Math.sin( phi );
+    particle.position.z = Math.floor(Math.random()*3000+2800)* Math.cos( phi );
+    particle.rotation.x = Math.random() * 3.5;
+    particle.rotation.y = Math.random() * 3.5;
+    particle.rotation.z = Math.random() * 3.5;
+  };
+/* First solid particle system with stars */
+    var sps = new BABYLON.SolidParticleSystem("sps", scene,{enableDepthSort: true});
+    var stars = new BABYLON.StandardMaterial("stars", scene);
+    stars.emissiveColor = new BABYLON.Color4(1.90, 2.1,2.13, 0.8);  
+    var extrusion = BABYLON.MeshBuilder.ExtrudeShapeCustom("star", {shape: myShape, path: myPath,  sideOrientation: BABYLON.Mesh.DOUBLESIDE, updatable: false}, scene); 
+    sps.addShape(extrusion, particleNb ,{positionFunction: myPositionFunction});
+    var mesh = sps.buildMesh();
+    mesh.material = stars;
+    extrusion.dispose(); 
+    
+ /* Second particle system with debris */    
+    var sps2 = new BABYLON.SolidParticleSystem("sps2", scene,{enableDepthSort: true});
+    var debris = BABYLON.MeshBuilder.CreateSphere("debris", {diameter: 6, segments: 8}, scene);
+    var d = new BABYLON.StandardMaterial("stars", scene); 
+    var dtexture = new BABYLON.WoodProceduralTexture("dtexture", 1024, scene);
+    d.emissiveTexture = dtexture;
+    dtexture.woodColor = new BABYLON.Color3(0.90, 0.25, 1.0);
+    dtexture.ampScale = new BABYLON.Vector2(0.8, 1.0);
+    d.diffuseColor = new BABYLON.Color3(0.41, 0.35, 0.35);  
+    debris.material = d;
+    sps2.addShape(debris, 300, {positionFunction: debrisposition, vertexFunction: myVertexFunction});        
+ 
+    var mesh2 = sps2.buildMesh();
+    mesh2.material = d;
+ 
+/* Sun */         
+    var sun = BABYLON.MeshBuilder.CreateSphere("sun", {diameter: 380}, scene);
+    var material = new BABYLON.StandardMaterial("material", scene);
+    var noiseTexture = new BABYLON.NoiseProceduralTexture("perlin", 386, scene);
+    noiseTexture.octaves = 7;
+    noiseTexture.persistence = 2;
+    noiseTexture.brightness = 0.1;
+        noiseTexture.animationSpeedFactor = 5;
+    material.emissiveTexture = noiseTexture;
+   material.diffusiveColor = new BABYLON.Color4(0.6259, 0.3056, 0.0619, 0.5);
+    material.emissiveColor = new BABYLON.Color4(0.6259, 0.3056, 0.0619, 0.5);
+    sun.material = material;
+    
+/* Black hole*/
+    var myh = [
+		new BABYLON.Vector3(0, 0, 0),
+      new BABYLON.Vector3(2, 2, 0),
+      new BABYLON.Vector3(4, 4, 0),
+        new BABYLON.Vector3(6, 6, 0),
+		new BABYLON.Vector3(8, 8, 0),
+      new BABYLON.Vector3(10, 10, 0),
+      new BABYLON.Vector3(12, 12, 0),
+      new BABYLON.Vector3(14, 14, 0),
+        new BABYLON.Vector3(14, 38, 0),
+      new BABYLON.Vector3(13.5, 39, 0),
+      new BABYLON.Vector3(13, 40, 0),
+		new BABYLON.Vector3(12, 41, 0),
+        new BABYLON.Vector3(10, 42, 0),
+        new BABYLON.Vector3(0, 43, 0)  
+	];
+      var myengine1 = [
+        new BABYLON.Vector3(4, 42, 10),
+         new BABYLON.Vector3(4, 53, 10),
+         new BABYLON.Vector3(0, 53, 10),
+	];
+       var myengine2 = [
+        new BABYLON.Vector3(-4, 42, 10),
+         new BABYLON.Vector3(-4, 53, 10),
+         new BABYLON.Vector3(0, 53, 10),
+	];
+    var hole = BABYLON.MeshBuilder.CreateLathe("hole",{shape:myh},scene);
+    var holematerial = new BABYLON.PBRSpecularGlossinessMaterial("holematerial",scene);
+    holematerial.diffuseColor = new BABYLON.Color3(0.71, 1.24, 1.33);
+    holematerial.specularColor = new BABYLON.Color3(0.39, 0.766, 0.336);
+    holematerial.glossiness = 1.0;
+    holematerial.ambientColor = new BABYLON.Color3(0.23, 0.98, 0.53);
+    holematerial.alphaMode = BABYLON.Engine.ALPHA_SUBTRACT; 
+    holematerial.visibility = 0.9999;
+    hole.material = holematerial;
 
-function setup() {
-    initializeFields();
-    background(17, 21, 28);
-    createCanvas(windowWidth, windowHeight);
-    pixelDensity(displayDensity());
-}
-
-function draw() {
-    background(17, 21, 28);
-    strokeWeight(2);
-
-    let targetX = mouseX;
-    let dx = targetX - x;
-    x += dx * easing;
-
-    let targetY = mouseY;
-    let dy = targetY - y;
-    y += dy * easing2;
-
-    let diameter1 = (width / 4 + height / 4) * 2;
-    let diameter2 = (width / 4 + height / 4) * 0.2;
-    let diameter3 = (width / 4 + height / 4) * 2;
-
-    let angle1 = 0.01;
-
-    //LOOP
-    for (let i = angle1; i < radians(360 + angle1); i += radians(360 / pointCount)) {
-        let cx1 = diameter2 / 2 * Math.cos(i / 2 + -t * sin(2)) + width / 2;
-        let cy1 = diameter2 / 2 * Math.sin(i / 2 + -t * sin(2)) + height / 2;
-
-        let cx2 = diameter1 / 2 * Math.cos(i + -t * sin(1 + 0.1)) + width / 2;
-        let cy2 = diameter1 / 2 * Math.sin(i + -t * sin(-2 + 0.1)) + height / 2;
-
-        let cx3 = diameter3 / 2 * Math.cos(-i + -t * sin(1 + 0.1)) + width / 2;
-        let cy3 = diameter3 / 2 * Math.sin(-i + -t * sin(-2 + 0.1)) + height / 2;
-
-        let cx4 = diameter2 / 2 * Math.cos(i / -2 + -t * sin(2)) + width / 2;
-        let cy4 = diameter2 / 2 * Math.sin(i / -2 + -t * sin(2)) + height / 2;
-
-        //BEZIER
-        strokeWeight(0.2);
-        stroke(261, 261, 261);
-        noFill();
-        beginShape();
-        vertex(cx1, cy1);
-        bezierVertex(cx2, cy2, cx3, cy3, cx4, cy4);
-        endShape();
+    var engine1 = BABYLON.MeshBuilder.CreateLathe("hole",{shape:myengine1},scene);
+    engine1.material = holematerial;
+    engine1.position.z =-2;
+    engine1.parent = hole;
+     var engine2 = BABYLON.MeshBuilder.CreateLathe("hole",{shape:myengine2},scene);
+    engine2.material = holematerial;
+    engine2.position.z =2;
+    engine2.parent = hole;
+/* smaller planet */   
+    var mySphere = BABYLON.MeshBuilder.CreateSphere("mySphere", {diameter: 80}, scene);
+    mySphere.parent = sun;
+        
+var earthmat= new BABYLON.StandardMaterial("stars", scene);
+     var earth = BABYLON.MeshBuilder.CreateSphere("earth", {diameter: 150}, scene);
+    var grass = new BABYLON.GrassProceduralTexture("grass", 104, scene);
+    earthmat.emissiveTexture = grass;
+    earth.material = earthmat;
+   earth.parent = sun;
+/* Larger planet */   
+    var planetmat= new BABYLON.StandardMaterial("stars", scene);
+    var planet = BABYLON.MeshBuilder.CreateSphere("planet", {diameter: 200}, scene);
+    var noiseTexturep = new BABYLON.NoiseProceduralTexture("perlin", 306, scene);
+    noiseTexturep.octaves = 6;
+    noiseTexturep.persistence = 0.8;
+    noiseTexturep.brightness = 0.5;
+    noiseTexturep.animationSpeedFactor = 0.00;
+    planetmat.emissiveTexture = noiseTexturep;
+    planetmat.alpha = 1;
+    planetmat.diffuseColor = new BABYLON.Color4(0.6259, 0.3056, 0.0619, 0.5);
+    planet.material = planetmat;	
+    planet.parent = sun;
+    
+    var gl = new BABYLON.GlowLayer("glow", scene);
+    gl.intensity = Math.floor(Math.random()*8+6);
+    var alpha = Math.PI;
+    var alpha2 = Math.PI;
+    var alpha3 = Math.PI;
+    var myShapef = [
+		 new BABYLON.Vector3(0, 5, -9),
+			new BABYLON.Vector3(1, 1, -2),
+			new BABYLON.Vector3(5, 0, -7),
+			new BABYLON.Vector3(1, -1, -4),
+			new BABYLON.Vector3(0, -5, -11),
+			new BABYLON.Vector3(-1, -1, -2),
+			new BABYLON.Vector3(-5, 0, -5),
+			new BABYLON.Vector3(-1, 1, -10)
+	];
+	
+	myShapef.push(myShapef[0]);
+	
+	var myPathf = [
+			new BABYLON.Vector3(0, 0, 0),
+			new BABYLON.Vector3(0, 0, 2),
+			new BABYLON.Vector3(0, 0, 4),
+			new BABYLON.Vector3(0, 0, 6),
+			new BABYLON.Vector3(0, 0, 8),
+			new BABYLON.Vector3(0, 0, 8)
+	];
+	
+	
+	var fire = BABYLON.MeshBuilder.ExtrudeShapeCustom("star", {shape: myShapef, path: myPathf,sideOrientation: BABYLON.Mesh.DOUBLESIDE, updatable: true}, scene);
+  var materialSphere = new BABYLON.StandardMaterial("mat", scene);
+  var fireTexture = new BABYLON.FireProceduralTexture("fire", 256, scene);
+  materialSphere.diffuseTexture = fireTexture;
+  materialSphere.opacityTexture = fireTexture;
+materialSphere.speed = 10.0;
+   fire.material = materialSphere;
+    fire.position = new BABYLON.Vector3(0, 57, 0);
+    fire.rotation.x = Math.PI /2;
+    fire.parent = engine1;
+   var fire2 = BABYLON.MeshBuilder.ExtrudeShapeCustom("star", {shape: myShapef, path: myPathf,sideOrientation: BABYLON.Mesh.DOUBLESIDE, updatable: true}, scene);
+    fire2.material = materialSphere;
+    fire2.position = new BABYLON.Vector3(0, 57, 0);
+    fire2.rotation.x = Math.PI /2;
+    fire2.parent = engine2;
+var myShapef2 = [
+		 	new BABYLON.Vector3(0, 5, -11),
+			new BABYLON.Vector3(1, 1, -5),
+			new BABYLON.Vector3(5, 0, -8),
+			new BABYLON.Vector3(1, -1, -7),
+			new BABYLON.Vector3(0, -5, -5),
+			new BABYLON.Vector3(-1, -1, -7),
+			new BABYLON.Vector3(-5, 0, -6),
+			new BABYLON.Vector3(-1, 1, -8)
+	];
+	
+	myShapef2.push(myShapef2[0]);
+	
+	var myPathf2 = [
+			new BABYLON.Vector3(0, 0, 0),
+			new BABYLON.Vector3(0, 0, 2),
+			new BABYLON.Vector3(0, 0, 4),
+			new BABYLON.Vector3(0, 0, 6),
+			new BABYLON.Vector3(0, 0, 8),
+			new BABYLON.Vector3(0, 0, 8)
+	];
+    var scrambleUp = function(data) {
+    for (index = 0; index < data.length; index ++) {
+        data[index] += 0.4 * Math.random();
     }
-    t += 0.0025;
 }
 
-function initializeFields() {
-    t = 0;
-    x = 0;
-    y = 0;
-    easing = 0.001;
-    easing2 = 0.01;
-    pointCount = 100;
+var scrambleDown = function(data) {
+    for (index = 0; index < data.length; index ++) {
+        data[index] -= 0.4 * Math.random();
+    }
 }
+    var sphere2 = BABYLON.MeshBuilder.ExtrudeShapeCustom("star", {shape: myShapef2, path: myPathf2, sideOrientation: BABYLON.Mesh.DOUBLESIDE, updatable: true}, scene);
+    sphere2.setEnabled(false);
+    sphere2.updateMeshPositions(scrambleUp);
 
-function windowResized() {
-    resizeCanvas(windowWidth, windowHeight);
-}
+    var manager = new BABYLON.MorphTargetManager();
+   fire.morphTargetManager = manager;
+fire2.morphTargetManager = manager;
+    var target0 = BABYLON.MorphTarget.FromMesh(sphere2, "sphere2", 0.25);
+    manager.addTarget(target0);
+var k = Date.now();
+    angle = 0;
+    var phi = Math.acos( -1 + ( 2 * 500 ) / 500 );
+	  var theta = Math.sqrt( 500 * Math.PI ) * phi;
+  var points = [];
+	var n = 1550; // number of points
+	var r = 800; //radius
+	for (var i = 0; i < n + 1; i++) {
+		points.push( new BABYLON.Vector3((r + (r/4)*Math.sin(20*i*Math.PI/n))* Math.sin(2*i*Math.PI/n), 0, (r + (r/40)*Math.sin(6*i*Math.PI/n)) * Math.cos(6*i*Math.PI/n)));
+	}	
+	
+    //Draw the curve
+	var track = BABYLON.MeshBuilder.CreateLines('track', {points: points}, scene);
+	var trackmat = new BABYLON.StandardMaterial("trackmat", scene);
+    trackmat.disableLighting = true;
+    track.material = trackmat;
+    track.isVisible = false;
+  /*-----------------------End Path------------------------------------------*/ 
+	
+  /*-----------------------Ground------------------------------------------*/ 	
+  var ground = BABYLON.MeshBuilder.CreateGround("ground", {width: 3*r, height: 3*r}, scene);
+        var groundmat = new BABYLON.StandardMaterial("groundmat",scene);
+
+    ground.isVisible = false;
+ 
+    ground.material = groundmat;
+  hole.position.z = r;
+    hole.rotation.set(0,0,-20);
+    var path3d = new BABYLON.Path3D(points);
+  var normals = path3d.getNormals();
+  var theta2 = Math.acos(BABYLON.Vector3.Dot(BABYLON.Axis.Z,normals[0]));
+  hole.rotate(BABYLON.Axis.Y, theta2, BABYLON.Space.WORLD); 
+  var startRotation = hole.rotationQuaternion;
+  /*-----------------------End Ground------------------------------------------*/ 	
+    
+      var i=0;
+    scene.registerBeforeRender(function() {
+   target0.influence = Math.sin(angle)*Math.sin(angle);
+        angle += 0.08;
+       sps2.mesh.rotation.y += 0.001;
+    sps2.mesh.position.y = Math.sin((k - Date.now())/1000) * 2;
+      hole.position.y =  Math.sin((k - Date.now())/1000) * 100;
+     hole.position.x = points[i].x;
+	 hole.position.z = points[i].z;
+theta2 = Math.acos(BABYLON.Vector3.Dot(normals[i],normals[i+1]));
+	 var dir = BABYLON.Vector3.Cross(normals[i],normals[i+1]).y;
+	 var dir = dir/Math.abs(dir);
+	 hole.rotate(BABYLON.Axis.Y, dir * theta2, BABYLON.Space.WORLD);
+	 
+	 i = (i + 1) % (n-1);	//continuous looping  
+	 
+	 if(i == 0) {
+		 hole.rotationQuaternion = startRotation;
+	 }
+    k += 0.02;
+		planet.position = new BABYLON.Vector3(600 * Math.sin(alpha),  
+    planet.parent.position.y, 600 * Math.cos(alpha));
+		planet.rotation.y += .03;
+
+    mySphere.position = new BABYLON.Vector3(850 * Math.sin(alpha2+1),         
+    mySphere.parent.position.y, 850 * Math.cos(alpha2+1));
+		mySphere.rotation.y += .03;	
+      
+    earth.position = new BABYLON.Vector3(1050 * Math.sin(alpha2+1.3),         
+    earth.parent.position.y, 1050 * Math.cos(alpha2+1.3));
+		earth.rotation.y += .02;	
+		alpha += 0.005;
+    alpha2 += 0.01;
+
+  });
+    /*
+  function mousemovef(){
+	    var pickResult = scene.pick(scene.pointerX, scene.pointerY,scene.pointerZ);
+
+	    if (pickResult.hit) {
+		  
+		 	
+            hole.position.x = pickResult.pickedPoint.x;
+            hole.position.y = pickResult.pickedPoint.y;
+            hole.position.z = pickResult.pickedPoint.z;	
+        }	
+    }
+
+    scene.onPointerMove = function () {
+        mousemovef();
+    };
+ scene.onPointerDown = function () {
+        mousemovef();
+    };
+   scene.onPointerUp = function () {
+      mousemovef();
+    };*/
+  
+   return scene;
+        };
+        /******* End of the create scene function ******/    
+
+        var scene = createScene(); //Call the createScene function
+
+        // Register a render loop to repeatedly render the scene
+        engine.runRenderLoop(function () { 
+                scene.render();
+        });
+
+        // Watch for browser/canvas resize events
+        window.addEventListener("resize", function () { 
+                engine.resize();
+        });
 	</script>
 
 <script>
